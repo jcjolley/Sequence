@@ -2,10 +2,10 @@
   "name": "ts-lodash-repl",
   "version": "1.0.0",
   "description": "",
-  "main": "index.html",
+  "main": "src/index.ts",
+  "type": "module",
   "scripts": {
-    "start": "parcel index.html --open",
-    "build": "parcel build index.html",
+    "build": "tsc",
     "test": "jest"
   },
   "dependencies": {},

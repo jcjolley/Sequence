@@ -4,13 +4,18 @@
     "jsx": "preserve",
     "esModuleInterop": true,
     "sourceMap": true,
-    "allowJs": true,
-    "lib": [
-      "ESNext",
-      "dom"
-    ],
+    "allowJs": false,
+    "lib": [ "esnext" ],
     "target": "ESNext",
     "rootDir": "src",
+    "declaration": true,
+    "outDir": "dist",
     "moduleResolution": "node"
-  }
+  },
+  "exclude":[
+    "dist",
+    "node_modules",
+    "benchmark",
+    "**/*.spec.ts"
+  ]
 }

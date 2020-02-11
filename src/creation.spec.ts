@@ -1,6 +1,6 @@
-import {Sequence} from "../src/sequence";
+import {Sequence} from "../src";
 
-describe('Sequnce.of', () => {
+describe('Sequence.of', () => {
 
     it('should create a Sequence from an Array', () => {
         const arr = [1, 2, 3, 4, 5]
@@ -16,7 +16,7 @@ describe('Sequnce.of', () => {
 
     it('should create a Sequence from a Map', () => {
         const map = new Map();
-        map.set("A test", true)
+        map.set("A test", true);
         const seq = Sequence.of(map);
         expect(seq).toBeInstanceOf(Sequence);
     });
@@ -31,7 +31,6 @@ describe('Sequnce.of', () => {
     it('should create a Sequence from an Object', () => {
         const obj = {a: 1, b: 2, c: 3};
         const seq = Sequence.of(obj);
-        console.log(seq.toArray());
         expect(seq).toBeInstanceOf(Sequence);
     });
 });
