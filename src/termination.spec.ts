@@ -25,4 +25,15 @@ describe("Terminations of Sequence:", () => {
             expect(res.get("c")).toEqual(3);
         });
     });
+
+    describe("toSet", () => {
+        it("should resolve into a Set", () => {
+            const arr = [1,1,1,2,3];
+            const seq = Sequence.of(arr);
+            const res = seq.toSet();
+
+            expect(res).toBeInstanceOf(Set);
+            expect(res.size).toEqual(3);
+        });
+    });
 });
