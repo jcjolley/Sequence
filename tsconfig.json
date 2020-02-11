@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "module": "ESNext",
+    "jsx": "preserve",
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "allowJs": true,
+    "lib": [
+      "ESNext",
+      "dom"
+    ],
+    "target": "ESNext",
+    "rootDir": "src",
+    "moduleResolution": "node"
+  }
+}
