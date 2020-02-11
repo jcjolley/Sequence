@@ -294,5 +294,10 @@ export class Sequence<T> {
     toArray(): T[] {
         return [...this];
     }
+
+    toMap<K,V>(): Map<K,V> {
+        const arr: [any, any][] = this.toArray() as unknown as any;
+        return new Map(arr);
+    }
 }
 
