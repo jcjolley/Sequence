@@ -28,12 +28,73 @@ describe("Terminations of Sequence:", () => {
 
     describe("toSet", () => {
         it("should resolve into a Set", () => {
-            const arr = [1,1,1,2,3];
+            const arr = [1, 1, 1, 2, 3];
             const seq = Sequence.of(arr);
             const res = seq.toSet();
 
             expect(res).toBeInstanceOf(Set);
             expect(res.size).toEqual(3);
+        });
+    });
+
+    describe("toObject", () => {
+        it("should resovle into an Object", () => {
+            const arr = [["a", 1], ["b", 2], ["c", 3]];
+            const seq = Sequence.of(arr);
+            const res = seq.toObject();
+
+            expect(res).toBeInstanceOf(Object);
+            expect(res.a).toEqual(1);
+            expect(res.b).toEqual(2);
+            expect(res.c).toEqual(3);
+        })
+    });
+
+    describe("reduce", () => {
+        it("should reduce a sequence into a single value", () => {
+            const res = Sequence.of([1, 2, 3, 4, 5]).reduce((acc, x) => acc + x, 0);
+            expect(res).toEqual(15)
+        });
+
+        it("should reduce a sequence into a single value when no initial value is provided", () => {
+            const res = Sequence.of([1, 2, 3, 4, 5]).reduce((acc, x) => acc + x);
+            expect(res).toEqual(15)
+        });
+    });
+
+    describe("fold", () => {
+        it("should fold a sequence into a single value", () => {
+            const res = Sequence.of([1, 2, 3, 4, 5]).fold((acc, x) => acc + x);
+            expect(res).toEqual(15)
+        });
+    });
+
+    describe("first", () => {
+        it("should return the first item in a sequence", () => {
+            const res = Sequence.of([1,2,3,4,5]).first();
+            expect(res).toEqual(1);
+        });
+
+        it("should gracefully handle an empty sequence", () => {
+            const res = Sequence.of([]).first();
+            expect(res).toBeUndefined();
+        });
+    });
+
+    describe("second", () => {
+        it("should return the second item in a sequence", () => {
+            const res = Sequence.of([1,2,3,4,5]).second();
+            expect(res).toEqual(2);
+        });
+
+        it("should gracefully handle an empty sequence", () => {
+            const res = Sequence.of([]).second();
+            expect(res).toBeUndefined();
+        });
+
+        it("should gracefully handle sequence with only one element", () => {
+            const res = Sequence.of([1]).second();
+            expect(res).toBeUndefined();
         });
     });
 });
