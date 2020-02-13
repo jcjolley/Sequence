@@ -14,7 +14,7 @@ export class Sequence<T> {
 
     static of<T>(obj: Iterable<T>): Sequence<T> {
         return new Sequence(function* (): Generator<T, void, undefined> {
-            for (const x of obj) {
+            for (const x of obj[Symbol.iterator]() as any) {
                 yield x;
             }
         })
@@ -30,9 +30,9 @@ export class Sequence<T> {
     }
 
     map<R>(fn: (x: T) => R): Sequence<R> {
-        const seq = this;
+        const genFn = this[Symbol.iterator];
         return new Sequence<R>(function* (): Generator<R, void, undefined> {
-            for (const x of seq) {
+            for (const x of genFn()) {
                 yield fn(x);
             }
         });
@@ -113,15 +113,16 @@ export class Sequence<T> {
     take(n: number): Sequence<T> {
         const seq = this;
         return new Sequence(function* () {
+            let num = n;
             for (const x of seq) {
-                if (n > 0) {
-                    n--;
+                if (num > 0) {
+                    num--;
                     yield x;
                 } else {
                     return;
                 }
             }
-        });
+        })
     }
 
     takeWhile(pred: (x: T) => boolean): Sequence<T> {
@@ -139,12 +140,9 @@ export class Sequence<T> {
 
     takeLast(n: number): Sequence<T> {
         const seq = this;
-        let length = 0;
         return new Sequence(function* () {
-            const gen = seq[Symbol.iterator]();
-            let done, value;
-            while (!done) {
-                ({done, value} = gen.next());
+            let length = 0;
+            for (const x of seq) {
                 length++;
             }
 
@@ -178,9 +176,8 @@ export class Sequence<T> {
 
     distinct(): Sequence<T> {
         const seq = this;
-        const previouslySeen = new Set();
-
         return new Sequence(function* () {
+            const previouslySeen = new Set();
             for (const x of seq) {
                 if (!previouslySeen.has(x)) {
                     previouslySeen.add(x);
@@ -294,7 +291,7 @@ export class Sequence<T> {
     }
 
     toArray(): T[] {
-        return [...this];
+        return [...this]
     }
 
     toMap<K, V>(): Map<K, V> {

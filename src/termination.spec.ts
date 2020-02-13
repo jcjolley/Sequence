@@ -11,6 +11,16 @@ describe("Terminations of Sequence:", () => {
             expect(res).toHaveLength(5);
             expect(res).toMatchObject(arr);
         });
+
+        it("should repeatedly generate an array", () => {
+            const arr = [1, 2, 3, 4, 5];
+            const seq = Sequence.of(arr).map(x => x + 1).take(3);
+            const res1 = seq.toArray();
+            const res2 = seq.toArray();
+            const res3 = seq.toArray();
+            expect(res1).toMatchObject(res2);
+            expect(res2).toMatchObject(res3);
+        });
     });
 
     describe("toMap", () => {

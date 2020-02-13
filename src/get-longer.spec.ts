@@ -56,4 +56,15 @@ describe("Methods that make the sequence longer:", () => {
             expect(seq.toArray().length).toEqual(6);
         });
     });
+
+    describe("cycle", () => {
+        it("should repeat forever", () => {
+            const seq = Sequence.of([1, 2, 3]).cycle().take(9);
+            const array1 = seq.toArray();
+            const array2 = seq.toArray();
+            const array3 = seq.toArray();
+            expect(array1).toMatchObject(array2);
+            expect(array2).toMatchObject(array3);
+        });
+    });
 });

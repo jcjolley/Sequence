@@ -5,7 +5,10 @@
     "esModuleInterop": true,
     "sourceMap": true,
     "allowJs": false,
-    "lib": [ "esnext" ],
+    "lib": [
+      "esnext",
+      "DOM"
+    ],
     "target": "ESNext",
     "rootDir": "src",
     "declaration": true,
