@@ -12,7 +12,7 @@ describe("Terminations of Sequence:", () => {
             expect(res).toMatchObject(arr);
         });
 
-        it("should repeatedly generate an array", () => {
+        it("should be repeatable", () => {
             const arr = [1, 2, 3, 4, 5];
             const seq = Sequence.of(arr).map(x => x + 1).take(3);
             const res1 = seq.toArray();
@@ -33,6 +33,14 @@ describe("Terminations of Sequence:", () => {
             expect(res.get("a")).toEqual(1);
             expect(res.get("b")).toEqual(2);
             expect(res.get("c")).toEqual(3);
+        });
+
+        it("should be repeatable", () => {
+            const arr = [["a", 1], ["b", 2], ["c", 3]];
+            const seq = Sequence.of(arr);
+            const res1 = seq.toMap();
+            const res2 = seq.toMap();
+            expect(res1).toMatchObject(res2)
         });
     });
 
