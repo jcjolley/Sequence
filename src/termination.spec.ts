@@ -68,6 +68,19 @@ describe("Terminations of Sequence:", () => {
         })
     });
 
+    describe("toString", () => {
+        it("should return a single string from the sequence", () => {
+            const res = Sequence.of(["This", "is", "a", "sentence"]).interpose(" ").append(".").toString();
+            expect(res).toEqual("This is a sentence.");
+        });
+
+        it("should be repeatable", () => {
+            const seq = Sequence.of(["This", "is", "a", "sentence"]).interpose(" ").append(".");
+            expect(seq.toString()).toEqual("This is a sentence.");
+            expect(seq.toString()).toEqual("This is a sentence.");
+        });
+    });
+
     describe("reduce", () => {
         it("should reduce a sequence into a single value", () => {
             const res = Sequence.of([1, 2, 3, 4, 5]).reduce((acc, x) => acc + x, 0);
@@ -115,4 +128,5 @@ describe("Terminations of Sequence:", () => {
             expect(res).toBeUndefined();
         });
     });
+
 });

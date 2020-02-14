@@ -55,8 +55,8 @@ describe("Methods that make the sequence longer:", () => {
 
         it("should be able to be consumed repeatedly", () => {
             const seq = Sequence.of([1, 2, 3]).concat([4, 5, 6]);
-            expect(seq.toArray()).toMatchObject([1, 2, 3]);
-            expect(seq.toArray()).toMatchObject([1, 2, 3]);
+            expect(seq.toArray()).toMatchObject([1, 2, 3, 4, 5, 6]);
+            expect(seq.toArray()).toMatchObject([1, 2, 3, 4, 5, 6]);
         })
     });
 
@@ -84,5 +84,32 @@ describe("Methods that make the sequence longer:", () => {
             expect(seq.toArray()).toMatchObject([1, 2, 3, 1, 2, 3, 1, 2, 3]);
             expect(seq.toArray()).toMatchObject([1, 2, 3, 1, 2, 3, 1, 2, 3]);
         })
+    });
+
+    describe("interleave", () => {
+        it("should interleave the elements of an Iterable into the sequence", () => {
+            const seq = Sequence.of([1, 3, 5]).interleave([2, 4]);
+            expect(seq.toArray()).toMatchObject([1, 2, 3, 4, 5])
+        });
+
+        it("should be repeatedly consumable", () => {
+            const seq = Sequence.of([1, 3, 5]).interleave([2, 4]);
+            expect(seq.toArray()).toMatchObject([1, 2, 3, 4, 5]);
+            expect(seq.toArray()).toMatchObject([1, 2, 3, 4, 5]);
+        })
+    });
+
+
+    describe("interpose", () => {
+        it("should interpose an item between every element of sequence", () => {
+            const seq = Sequence.of([1, 1, 1]).interpose(2);
+            expect(seq.toArray()).toMatchObject([1, 2, 1, 2, 1]);
+        });
+
+        it("should be repeatedly consumable", () => {
+            const seq = Sequence.of([1, 1, 1]).interpose(2);
+            expect(seq.toArray()).toMatchObject([1, 2, 1, 2, 1]);
+            expect(seq.toArray()).toMatchObject([1, 2, 1, 2, 1]);
+        });
     });
 });

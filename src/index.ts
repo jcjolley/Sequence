@@ -51,11 +51,12 @@ export class Sequence<T> {
     rest(start = 1): Sequence<T> {
         const seq = this;
         return new Sequence(function* (): Generator<T, void, undefined> {
+            let i = start;
             for (const x of seq) {
-                if (start === 0) {
+                if (i === 0) {
                     yield x;
                 } else {
-                    start--;
+                    i--;
                 }
             }
         });
@@ -150,7 +151,7 @@ export class Sequence<T> {
             let i = 0;
             for (const x of seq) {
                 i++;
-                if (i >= start) {
+                if (i > start) {
                     yield x;
                 }
             }
@@ -308,6 +309,14 @@ export class Sequence<T> {
             obj[key] = value;
         }
         return obj;
+    }
+
+    toString(): string {
+        let res = "";
+        for (const c of this) {
+            res += c;
+        }
+        return res;
     }
 }
 
