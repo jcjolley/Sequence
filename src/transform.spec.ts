@@ -36,4 +36,41 @@ describe("Transform a sequence", () => {
             expect(seq.toArray()).toMatchObject([1, 2, 3, 4, 5, 6]);
         });
     });
+
+    describe("partition", () => {
+        it("should divide a sequence based on the provided function", () => {
+            const seq = Sequence.ofItems(1, 2).cycle().partition(x => x % 2 === 1);
+            expect(seq.first().take(5).toArray()).toMatchObject([1, 1, 1, 1, 1]);
+            expect(seq.second().take(5).toArray()).toMatchObject([2, 2, 2, 2, 2]);
+        });
+
+        it("should be repeatably consumable", () => {
+            const seq = Sequence.ofItems(1, 2).cycle().partition(x => x % 2 === 0);
+            expect(seq.second().take(5).toArray()).toMatchObject([1, 1, 1, 1, 1]);
+            expect(seq.first().take(5).toArray()).toMatchObject([2, 2, 2, 2, 2]);
+
+            expect(seq.second().take(5).toArray()).toMatchObject([1, 1, 1, 1, 1]);
+            expect(seq.first().take(5).toArray()).toMatchObject([2, 2, 2, 2, 2]);
+        });
+    });
+
+    describe("partitionBy", () => {
+        it("should divide a sequence based on the provided function", () => {
+            const seq = Sequence.ofItems(1, 1, 2, 2).cycle().partitionBy(x => x % 2 === 1);
+            expect(seq.first().toArray()).toMatchObject([1, 1]);
+            expect(seq.second().toArray()).toMatchObject([2, 2]);
+            expect(seq.nth(2).toArray()).toMatchObject([1, 1]);
+        });
+
+        it("should be repeatably consumable", () => {
+            const seq = Sequence.ofItems(1, 1, 2, 2).cycle().partitionBy(x => x % 2 === 1);
+            expect(seq.first().toArray()).toMatchObject([1, 1]);
+            expect(seq.second().toArray()).toMatchObject([2, 2]);
+            expect(seq.nth(2).toArray()).toMatchObject([1, 1]);
+
+            expect(seq.first().toArray()).toMatchObject([1, 1]);
+            expect(seq.second().toArray()).toMatchObject([2, 2]);
+            expect(seq.nth(2).toArray()).toMatchObject([1, 1]);
+        });
+    });
 });

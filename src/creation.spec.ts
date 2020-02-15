@@ -34,7 +34,7 @@ describe('Sequence Creation: ', () => {
         });
 
         it('should create a Sequence from multiple arguments', () => {
-            const seq = Sequence.of(1, 2, 3, 4, 5);
+            const seq = Sequence.ofItems(1, 2, 3, 4, 5);
             expect(seq).toBeInstanceOf(Sequence);
             expect(seq.toArray()).toMatchObject([1, 2, 3, 4, 5])
         });
@@ -47,4 +47,53 @@ describe('Sequence Creation: ', () => {
             expect(seq).toBeInstanceOf(Sequence);
         });
     });
+
+    describe('range', () => {
+        it('should create a range of numbers', () => {
+            const seq = Sequence.range().take(5);
+            expect(seq).toBeInstanceOf(Sequence);
+            expect(seq.toArray()).toMatchObject([0, 1, 2, 3, 4])
+        });
+
+        it('should stop when you tell it to', () => {
+            const seq = Sequence.range(0, 5);
+            expect(seq).toBeInstanceOf(Sequence);
+            expect(seq.toArray()).toMatchObject([0, 1, 2, 3, 4])
+        });
+
+        it('should start where you tell it to', () => {
+            const seq = Sequence.range(5, 10);
+            expect(seq).toBeInstanceOf(Sequence);
+            expect(seq.toArray()).toMatchObject([5, 6, 7, 8, 9])
+        });
+
+        it('should step like you tell it to', () => {
+            const seq = Sequence.range(0, 10, 2);
+            expect(seq).toBeInstanceOf(Sequence);
+            expect(seq.toArray()).toMatchObject([0, 2, 4, 6, 8])
+        })
+    });
+
+    describe('repeat', () => {
+        it('should repeat a value forever', () => {
+            const seq = Sequence.repeat(1).take(5);
+            expect(seq).toBeInstanceOf(Sequence);
+            expect(seq.toArray()).toMatchObject([1, 1, 1, 1, 1])
+        });
+
+        it('should stop when you tell it to', () => {
+            const seq = Sequence.repeat(1, 5);
+            expect(seq).toBeInstanceOf(Sequence);
+            expect(seq.toArray()).toMatchObject([1, 1, 1, 1, 1])
+        });
+    });
+
+    describe("iterate", () => {
+        it("should iterate on a function", () => {
+            const seq = Sequence.iterate((n) => n + 1, 5).take(5);
+            expect(seq).toBeInstanceOf(Sequence);
+            expect(seq.toArray()).toMatchObject([6, 7, 8, 9, 10])
+
+        })
+    })
 });

@@ -129,6 +129,23 @@ describe("Terminations of Sequence:", () => {
         });
     });
 
+    describe("nth", () => {
+        it("should return the second item in a sequence", () => {
+            const res = Sequence.of([1, 2, 3, 4, 5]).nth(1);
+            expect(res).toEqual(2);
+        });
+
+        it("should gracefully handle an empty sequence", () => {
+            const res = Sequence.of([]).nth(0);
+            expect(res).toBeUndefined();
+        });
+
+        it("should gracefully handle sequence with only one element", () => {
+            const res = Sequence.of([1]).nth(1);
+            expect(res).toBeUndefined();
+        });
+    });
+
     describe("groupBy", () => {
         it("should group items by the result of the function provided", () => {
             const groupingFn = (x) => {
@@ -136,11 +153,11 @@ describe("Terminations of Sequence:", () => {
                 else if (x <= 6) return "3<x<=6";
                 else return "x>6"
             };
-            const map = Sequence.of(1, 2, 3, 4, 5, 6, 7, 8, 9).groupBy(groupingFn);
+            const map = Sequence.ofItems(1, 2, 3, 4, 5, 6, 7, 8, 9).groupBy(groupingFn);
             expect(map).toMatchObject(new Map([
-                ["x<=3", Sequence.of(1, 2, 3)],
-                ["3<x<=6", Sequence.of(4, 5, 6)],
-                ["x>6", Sequence.of(7, 8, 9)]
+                ["x<=3", Sequence.ofItems(1, 2, 3)],
+                ["3<x<=6", Sequence.ofItems(4, 5, 6)],
+                ["x>6", Sequence.ofItems(7, 8, 9)]
             ]))
         })
     })

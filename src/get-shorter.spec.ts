@@ -40,19 +40,6 @@ describe("Methods that make a sequence shorter: ", () => {
         });
     });
 
-    describe("next", () => {
-        it("alias for rest(1)", () => {
-            const seq = Sequence.of([1, 2, 3]).next();
-            expect(seq.toArray()).toMatchObject([2, 3]);
-        });
-
-        it("should be repeatedly consumable", () => {
-            const seq = Sequence.of([1, 2, 3]).next();
-            expect(seq.toArray()).toMatchObject([2, 3]);
-            expect(seq.toArray()).toMatchObject([2, 3]);
-        });
-    });
-
     describe("filter", () => {
         it("only keep items that pass the predicate", () => {
             const seq = Sequence.of([1, 2, 3, 4, 5]).filter(x => x % 2 == 1);
@@ -125,6 +112,29 @@ describe("Methods that make a sequence shorter: ", () => {
         });
     });
 
+    describe("takeNth", () => {
+        it("Take the last n from the seq", () => {
+            const seq = Sequence.of([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]).takeNth(3);
+            expect(seq.toArray()).toMatchObject([1, 4, 7, 10]);
+        });
+
+        it("should gracefully handle a small seq", () => {
+            const seq = Sequence.of([1, 2, 3, 4]).takeNth(6);
+            expect(seq.toArray()).toMatchObject([1]);
+        });
+
+        it("should gracefully handle an empty seq", () => {
+            const seq = Sequence.of([]).takeNth(5);
+            expect(seq.toArray()).toMatchObject([]);
+        });
+
+        it("should be repeatedly consumable", () => {
+            const seq = Sequence.of([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]).takeNth(3);
+            expect(seq.toArray()).toMatchObject([1, 4, 7, 10]);
+            expect(seq.toArray()).toMatchObject([1, 4, 7, 10]);
+        });
+    });
+
     describe("distinct", () => {
         it('should remove duplicates from the seq', () => {
             const seq = Sequence.of([1, 2, 3, 1, 2, 3, 1, 2, 3]).distinct();
@@ -150,5 +160,32 @@ describe("Methods that make a sequence shorter: ", () => {
             expect(seq.toArray()).toMatchObject([1, 3, 5]);
         });
     });
+
+    describe("dedupe", () => {
+        it('should remove consecutive duplicates', () => {
+            const seq = Sequence.of([1, 1, 2, 2, 1]).dedupe();
+            expect(seq.toArray()).toMatchObject([1, 2, 1]);
+        });
+
+        it('should be repeatedly consumable', () => {
+            const seq = Sequence.of([1, 1, 2, 2, 1]).dedupe();
+            expect(seq.toArray()).toMatchObject([1, 2, 1]);
+            expect(seq.toArray()).toMatchObject([1, 2, 1]);
+        });
+    });
+
+    describe("butLast", () => {
+        it('returns a sequence with all but the last element', () => {
+            const seq = Sequence.range(1, 5).butLast();
+            expect(seq.toArray()).toMatchObject([1, 2, 3]);
+        });
+
+        it('should be repeatedly consumable', () => {
+            const seq = Sequence.range(1, 5).butLast();
+            expect(seq.toArray()).toMatchObject([1, 2, 3]);
+            expect(seq.toArray()).toMatchObject([1, 2, 3]);
+        });
+    });
+
 
 });
