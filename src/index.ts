@@ -247,6 +247,10 @@ export class Sequence<T> {
         return Sequence.ofItems(this.take(n), this.drop(n));
     }
 
+    splitWith(fn: (x: T) => boolean): Sequence<Sequence<T>> {
+        return Sequence.ofItems(this.takeWhile(fn), this.dropWhile(fn));
+    }
+
     flatten(flattenStr: boolean = false): Sequence<any> {
         const seq = this;
         return new Sequence(function* () {

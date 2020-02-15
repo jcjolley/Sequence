@@ -90,4 +90,21 @@ describe("Transform a sequence", () => {
             expect(seq.second().toArray()).toMatchObject([4, 5, 6]);
         });
     });
+
+    describe("splitWith", () => {
+        it("should divide a sequence when fn returns false", () => {
+            const seq = Sequence.ofItems(1, 2, 3, 4, 5, 6).splitWith(x => x < 4);
+            expect(seq.first().toArray()).toMatchObject([1, 2, 3]);
+            expect(seq.second().toArray()).toMatchObject([4, 5, 6]);
+        });
+
+        it("should be repeatably consumable", () => {
+            const seq = Sequence.ofItems(1, 2, 3, 4, 5, 6).splitWith(x => x < 4);
+            expect(seq.first().toArray()).toMatchObject([1, 2, 3]);
+            expect(seq.second().toArray()).toMatchObject([4, 5, 6]);
+
+            expect(seq.first().toArray()).toMatchObject([1, 2, 3]);
+            expect(seq.second().toArray()).toMatchObject([4, 5, 6]);
+        });
+    });
 });
