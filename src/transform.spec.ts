@@ -73,4 +73,21 @@ describe("Transform a sequence", () => {
             expect(seq.nth(2).toArray()).toMatchObject([1, 1]);
         });
     });
+
+    describe("splitAt", () => {
+        it("should divide a sequence based at n", () => {
+            const seq = Sequence.ofItems(1, 2, 3, 4, 5, 6).splitAt(3);
+            expect(seq.first().toArray()).toMatchObject([1, 2, 3]);
+            expect(seq.second().toArray()).toMatchObject([4, 5, 6]);
+        });
+
+        it("should be repeatably consumable", () => {
+            const seq = Sequence.ofItems(1, 2, 3, 4, 5, 6).splitAt(3);
+            expect(seq.first().toArray()).toMatchObject([1, 2, 3]);
+            expect(seq.second().toArray()).toMatchObject([4, 5, 6]);
+
+            expect(seq.first().toArray()).toMatchObject([1, 2, 3]);
+            expect(seq.second().toArray()).toMatchObject([4, 5, 6]);
+        });
+    });
 });

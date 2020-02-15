@@ -243,6 +243,10 @@ export class Sequence<T> {
         })
     }
 
+    splitAt(n: number): Sequence<Sequence<T>> {
+        return Sequence.ofItems(this.take(n), this.drop(n));
+    }
+
     flatten(flattenStr: boolean = false): Sequence<any> {
         const seq = this;
         return new Sequence(function* () {
@@ -264,7 +268,6 @@ export class Sequence<T> {
             }
         });
     }
-
 
     distinct(): Sequence<T> {
         const seq = this;
