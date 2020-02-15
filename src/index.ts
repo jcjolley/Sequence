@@ -12,12 +12,31 @@ export class Sequence<T> {
         }
     }
 
-    static of<T>(obj: Iterable<T>): Sequence<T> {
-        return new Sequence(function* (): Generator<T, void, undefined> {
-            for (const x of obj[Symbol.iterator]() as any) {
-                yield x;
+    static of<T>(...objects: Array<T | Iterable<T>>): Sequence<T> {
+        console.log("Sequence.of: ", objects);
+        if (arguments.length === 1) {
+            const obj = objects[0];
+            if (isIterable<T>(obj)) {
+                return new Sequence(function* (): Generator<T, void, undefined> {
+                    for (const x of obj) {
+                        yield x as T;
+                    }
+                })
+            } else {
+                return new Sequence(function* (): Generator<T, void, undefined> {
+                    console.log("Yielding single item", obj);
+                    console.log("Objects: ", objects);
+                    yield obj as T;
+                })
             }
-        })
+        } else if (arguments.length > 1) {
+            console.log("Objects length is > 1", objects);
+            return new Sequence(function* (): Generator<T, void, undefined> {
+                for (const x of objects) {
+                    yield x as T;
+                }
+            })
+        }
     }
 
     static fromObj(obj: any): Sequence<[string, unknown]> {
@@ -92,7 +111,7 @@ export class Sequence<T> {
         return acc;
     }
 
-    fold(fn: (acc: any, x: T) => any){
+    fold(fn: (acc: any, x: T) => any) {
         let acc = this.first();
         for (const x of this.rest()) {
             acc = fn(acc, x)
@@ -163,14 +182,20 @@ export class Sequence<T> {
         const seq = this;
         return new Sequence(function* () {
             for (const x of seq) {
-                if (!isIterable(x, flattenStr)) {
-                    yield x;
-                } else {
-                    const xs = Sequence.of(x as any);
-                    for (const y of xs.flatten(flattenStr)) {
-                        yield y;
+                let stack = [];
+                let curr: any = x;
+                do {
+                    while (isIterable(curr, flattenStr)) {
+                        const arr = [...curr]; // TODO: reimplement this with generators so we don't have to hold the whole seq in memory here
+                        if (arr.length > 0) {
+                            const toStack = arr.slice(1);
+                            if (toStack.length > 0) stack.push(toStack);
+                            curr = arr[0];
+                        }
                     }
-                }
+                    yield curr;
+                    curr = stack.pop();
+                } while (stack.length > 0 || curr !== undefined);
             }
         });
     }
@@ -210,7 +235,9 @@ export class Sequence<T> {
     append(x: T): Sequence<T> {
         const seq = this;
         return new Sequence(function* () {
-            for (const x of seq) {yield x}
+            for (const x of seq) {
+                yield x
+            }
             yield x;
         });
     }
@@ -291,6 +318,20 @@ export class Sequence<T> {
         });
     }
 
+    groupBy<R>(fn: (x: T) => R): Map<R, Sequence<T>> {
+        const map = new Map<R, Sequence<T>>();
+        for (const x of this) {
+            const y = fn(x);
+            if (map.has(y)) {
+                const group = map.get(y);
+                map.set(y, group.append(x))
+            } else {
+                map.set(y, Sequence.of(x))
+            }
+        }
+        return map;
+    }
+
     toArray(): T[] {
         return [...this]
     }
@@ -317,6 +358,16 @@ export class Sequence<T> {
             res += c;
         }
         return res;
+    }
+
+    toGenerator(): Generator<T, void, undefined> {
+        return this[Symbol.iterator]();
+    }
+
+    isDone(): boolean {
+        const gen = this.toGenerator();
+        const {done} = gen.next();
+        return done;
     }
 }
 
