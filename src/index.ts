@@ -176,29 +176,6 @@ export class Sequence<T> {
         });
     }
 
-
-    flattenOld(flattenStr: boolean = false): Sequence<any> {
-        const seq = this;
-        return new Sequence(function* () {
-            for (const x of seq) {
-                let stack = [];
-                let curr: any = x;
-                do {
-                    while (isIterable(curr, flattenStr)) {
-                        const arr = [...curr]; // TODO: reimplement this with generators so we don't have to hold the whole seq in memory here
-                        if (arr.length > 0) {
-                            const toStack = arr.slice(1);
-                            if (toStack.length > 0) stack.push(toStack);
-                            curr = arr[0];
-                        }
-                    }
-                    yield curr;
-                    curr = stack.pop();
-                } while (stack.length > 0 || curr !== undefined);
-            }
-        });
-    }
-
     flatten(flattenStr: boolean = false): Sequence<any> {
         const seq = this;
         return new Sequence(function* () {
