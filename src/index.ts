@@ -13,7 +13,6 @@ export class Sequence<T> {
     }
 
     static of<T>(...objects: Array<T | Iterable<T>>): Sequence<T> {
-        console.log("Sequence.of: ", objects);
         if (arguments.length === 1) {
             const obj = objects[0];
             if (isIterable<T>(obj)) {
@@ -178,7 +177,7 @@ export class Sequence<T> {
     }
 
 
-    flatten(flattenStr: boolean = false): Sequence<any> {
+    flattenOld(flattenStr: boolean = false): Sequence<any> {
         const seq = this;
         return new Sequence(function* () {
             for (const x of seq) {
@@ -199,6 +198,35 @@ export class Sequence<T> {
             }
         });
     }
+
+    flatten(flattenStr: boolean = false): Sequence<any> {
+        const seq = this;
+        return new Sequence(function* () {
+            for (const x of seq) {
+                let stack: any[] = [x];
+                while (stack.length > 0) {
+                    let curr = stack.pop();
+                    if (isIterable(curr, flattenStr)) {
+                        const gen = curr[Symbol.iterator]();
+                        const {done, value} = gen.next();
+                        if (!done) {
+                            stack.push(gen);
+                            stack.push(value);
+                        }
+                    } else if (curr && curr.next) {
+                        const {done, value} = curr.next();
+                        if (!done) {
+                            stack.push(curr);
+                            stack.push(value);
+                        }
+                    } else {
+                        yield curr;
+                    }
+                }
+            }
+        });
+    }
+
 
     distinct(): Sequence<T> {
         const seq = this;
