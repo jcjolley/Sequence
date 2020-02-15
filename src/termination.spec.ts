@@ -102,7 +102,7 @@ describe("Terminations of Sequence:", () => {
 
     describe("first", () => {
         it("should return the first item in a sequence", () => {
-            const res = Sequence.of([1,2,3,4,5]).first();
+            const res = Sequence.of([1, 2, 3, 4, 5]).first();
             expect(res).toEqual(1);
         });
 
@@ -114,7 +114,7 @@ describe("Terminations of Sequence:", () => {
 
     describe("second", () => {
         it("should return the second item in a sequence", () => {
-            const res = Sequence.of([1,2,3,4,5]).second();
+            const res = Sequence.of([1, 2, 3, 4, 5]).second();
             expect(res).toEqual(2);
         });
 
@@ -129,4 +129,19 @@ describe("Terminations of Sequence:", () => {
         });
     });
 
+    describe("groupBy", () => {
+        it("should group items by the result of the function provided", () => {
+            const groupingFn = (x) => {
+                if (x <= 3) return "x<=3";
+                else if (x <= 6) return "3<x<=6";
+                else return "x>6"
+            };
+            const map = Sequence.of(1, 2, 3, 4, 5, 6, 7, 8, 9).groupBy(groupingFn);
+            expect(map).toMatchObject(new Map([
+                ["x<=3", Sequence.of(1, 2, 3)],
+                ["3<x<=6", Sequence.of(4, 5, 6)],
+                ["x>6", Sequence.of(7, 8, 9)]
+            ]))
+        })
+    })
 });

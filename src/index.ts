@@ -12,9 +12,9 @@ export class Sequence<T> {
         }
     }
 
-    static of<T>(...objects: Array<T | Iterable<T>>): Sequence<T> {
+    static of<T>(...elements: Array<T | Iterable<T>>): Sequence<T> {
         if (arguments.length === 1) {
-            const obj = objects[0];
+            const obj = elements[0];
             if (isIterable<T>(obj)) {
                 return new Sequence(function* (): Generator<T, void, undefined> {
                     for (const x of obj) {
@@ -23,15 +23,12 @@ export class Sequence<T> {
                 })
             } else {
                 return new Sequence(function* (): Generator<T, void, undefined> {
-                    console.log("Yielding single item", obj);
-                    console.log("Objects: ", objects);
                     yield obj as T;
                 })
             }
         } else if (arguments.length > 1) {
-            console.log("Objects length is > 1", objects);
             return new Sequence(function* (): Generator<T, void, undefined> {
-                for (const x of objects) {
+                for (const x of elements) {
                     yield x as T;
                 }
             })
