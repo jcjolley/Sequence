@@ -37,13 +37,11 @@ describe("Terminations of Sequence:", () => {
 
         it("should map sequences of sequences", () => {
             const map = Sequence.range().chunk(2).take(3).toMap();
-            console.log("map: ", map);
             expect(map).toMatchObject(new Map([[0, 1], [2, 3], [4, 5]]))
         });
 
         it("should handle empty sequences", () => {
             const map = Sequence.of([]).toMap();
-            console.log("map: ", map);
             expect(map).toMatchObject(new Map())
         });
 
