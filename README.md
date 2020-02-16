@@ -15,5 +15,9 @@ Play around with Sequences on CodeSandbox:
 
 ## Usage
 
+Usage instructions coming shortly
+
 ## Contributing
+
+Gladly taking pull requests, just be sure to add tests and make sure everything's passing
 
