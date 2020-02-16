@@ -1,6 +1,6 @@
 {
   "name": "@jcjolley/sequence",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "A blazing fast lazy list built on around generators",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
