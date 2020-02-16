@@ -1,4 +1,4 @@
-#Sequence 
+# Sequence 
 
 ###### A fully-typed batteries-included lazy list with faster-than-array performance built around generators
 
