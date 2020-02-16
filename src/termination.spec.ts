@@ -35,6 +35,18 @@ describe("Terminations of Sequence:", () => {
             expect(res.get("c")).toEqual(3);
         });
 
+        it("should map sequences of sequences", () => {
+            const map = Sequence.range().chunk(2).take(3).toMap();
+            console.log("map: ", map);
+            expect(map).toMatchObject(new Map([[0, 1], [2, 3], [4, 5]]))
+        });
+
+        it("should handle empty sequences", () => {
+            const map = Sequence.of([]).toMap();
+            console.log("map: ", map);
+            expect(map).toMatchObject(new Map())
+        });
+
         it("should be repeatable", () => {
             const arr = [["a", 1], ["b", 2], ["c", 3]];
             const seq = Sequence.of(arr);
@@ -159,6 +171,26 @@ describe("Terminations of Sequence:", () => {
                 ["3<x<=6", Sequence.ofItems(4, 5, 6)],
                 ["x>6", Sequence.ofItems(7, 8, 9)]
             ]))
+        })
+    });
+    describe("forEach", () => {
+        it("should iterate on the object for side effects, returning nothing", () => {
+            // Don't use this method this way.  I'm creating a result purely to have something to test.
+            let total = 0;
+            Sequence.ofItems(1, 2, 3, 4, 5).forEach((n) => total += n);
+            expect(total).toEqual(15)
+        });
+
+        it("should be repeatably callable", () => {
+            // Don't use this method this way.  I'm creating a result purely to have something to test.
+            let total = 0;
+            const seq = Sequence.ofItems(1, 2, 3, 4, 5);
+            seq.forEach((n) => total += n);
+            expect(total).toEqual(15);
+
+            let total2 = 0;
+            seq.forEach((n) => total2 += n);
+            expect(total2).toEqual(15)
         })
     })
 });

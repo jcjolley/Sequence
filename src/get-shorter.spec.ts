@@ -187,5 +187,23 @@ describe("Methods that make a sequence shorter: ", () => {
         });
     });
 
+    describe("compact", () => {
+        it('should return a sequence with all of the falsey values removed', () => {
+            const seq = Sequence.range().take(5).compact();
+            expect(seq.toArray()).toMatchObject([1, 2, 3, 4]);
+        });
+
+        it('should with only void values removed if flagged for it', () => {
+            const seq = Sequence.ofItems(undefined, 0, null, 1, null, 2, undefined, 3, 4, null).compact(true);
+            expect(seq.toArray()).toMatchObject([0, 1, 2, 3, 4]);
+        });
+
+        it('should be repeatedly consumable', () => {
+            const seq = Sequence.range().take(5).compact();
+            expect(seq.toArray()).toMatchObject([1, 2, 3, 4]);
+            expect(seq.toArray()).toMatchObject([1, 2, 3, 4]);
+        });
+    });
+
 
 });

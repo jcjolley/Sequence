@@ -14,6 +14,19 @@ describe("Transform a sequence", () => {
         });
     });
 
+    describe("mapIndexed", () => {
+        it('should apply the provided function to each element of the sequence with the index', () => {
+            const seq = Sequence.of([1, 2, 3]).mapIndexed((i, x) => x + i);
+            expect(seq.toArray()).toMatchObject([1, 3, 5]);
+        });
+
+        it('should be repeatedly consumable', () => {
+            const seq = Sequence.of([1, 2, 3]).mapIndexed((i, x) => x + i);
+            expect(seq.toArray()).toMatchObject([1, 3, 5]);
+            expect(seq.toArray()).toMatchObject([1, 3, 5]);
+        });
+    });
+
     describe("flatten", () => {
         it('should flatten nested iterables', () => {
             const seq = Sequence.of([1, [2, 3], [[4], [5, 6]]]).flatten();
@@ -74,6 +87,19 @@ describe("Transform a sequence", () => {
         });
     });
 
+    describe("chunk", () => {
+        it("should partition a sequence into groups with the provided size and step", () => {
+            const chunked = Sequence.range().chunk(2).take(3).map(x => x.toArray());
+            expect(chunked.toArray()).toMatchObject([[0, 1], [2, 3], [4, 5]])
+        });
+
+        it("should be repeatable", () => {
+            const chunked = Sequence.range().chunk(2).take(3).map(x => x.toArray());
+            expect(chunked.toArray()).toMatchObject([[0, 1], [2, 3], [4, 5]]);
+            expect(chunked.toArray()).toMatchObject([[0, 1], [2, 3], [4, 5]])
+        })
+    });
+
     describe("splitAt", () => {
         it("should divide a sequence based at n", () => {
             const seq = Sequence.ofItems(1, 2, 3, 4, 5, 6).splitAt(3);
@@ -107,4 +133,23 @@ describe("Transform a sequence", () => {
             expect(seq.second().toArray()).toMatchObject([4, 5, 6]);
         });
     });
+
+    describe("replace", () => {
+        it("should replace any items found as keys in the map with their corresponding values", () => {
+            const letters = Sequence.range().map(x => String.fromCharCode(x + 65)).take(3);
+            const replacements = Sequence.range().interleave(letters).toMap<number, string>();
+            const seq = Sequence.range().replace(replacements).take(5);
+
+            expect(seq.toArray()).toMatchObject(["A", "B", "C", 3, 4])
+        });
+
+        it("should be repeatedly consumable", () => {
+            const letters = Sequence.range().map(x => String.fromCharCode(x + 65)).take(3);
+            const replacements = Sequence.range().interleave(letters).toMap<number, string>();
+            const seq = Sequence.range().replace(replacements).take(5);
+
+            expect(seq.toArray()).toMatchObject(["A", "B", "C", 3, 4]);
+            expect(seq.toArray()).toMatchObject(["A", "B", "C", 3, 4])
+        })
+    })
 });

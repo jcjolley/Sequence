@@ -1,5 +1,6 @@
 import {isIterable, isIterator} from "./utilities";
 
+/** @class Sequence representing a lazy list of values. */
 export class Sequence<T> {
     * [Symbol.iterator](): Generator<T, void, undefined> {
     }
@@ -80,6 +81,53 @@ export class Sequence<T> {
                 yield fn(x);
             }
         });
+    }
+
+    mapIndexed<R>(fn: (index: number, x: T) => R): Sequence<R> {
+        const seq = this;
+        return new Sequence<R>(function* (): Generator<R, void, undefined> {
+            let i = 0;
+            for (const x of seq) {
+                yield fn(i, x);
+                i++;
+            }
+        })
+    }
+
+    forEach(fn: (x: T) => any): void {
+        for (const x of this) {
+            fn(x);
+        }
+    }
+
+    replace<R>(replacements: Map<T, R>): Sequence<T | R> {
+        const seq = this;
+        return new Sequence(function* () {
+            for (const x of seq) {
+                yield replacements.has(x) ? replacements.get(x) : x
+            }
+        })
+    }
+
+    chunk(size: number, step = 1): Sequence<Sequence<T>> {
+        const seq = this;
+        return new Sequence(function* () {
+            let s = step;
+            let group = [];
+            for (const x of seq) {
+                if (group.length < size) {
+                    group.push(x)
+                } else {
+                    if (s > 1) {
+                        s--;
+                    } else {
+                        yield Sequence.of(group);
+                        group = [x];
+                        s = step;
+                    }
+                }
+            }
+        })
     }
 
     first(): undefined | T {
@@ -435,12 +483,36 @@ export class Sequence<T> {
         })
     }
 
+    /**
+     *  Removes falsey values, like 0, null, undefined, and false
+     *
+     *  @param voidOnly - if true, only removes "void" (null || undefined)
+     *  @returns A list with only the 'truthy' items remaining
+     */
+    compact(voidOnly = false): Sequence<T> {
+        if (voidOnly) {
+            return this.filter(x => x !== undefined && x !== null)
+        } else {
+            return this.filter(x => !!x)
+        }
+    }
+
     toArray(): T[] {
         return [...this]
     }
 
     toMap<K, V>(): Map<K, V> {
-        return new Map(this as any);
+        const first = this.first();
+        if (first instanceof Sequence && first.length() === 2) {
+            const mappableSeq = this.map((x: any) => x.toArray());
+            return new Map<K, V>(mappableSeq)
+        } else if (Array.isArray(first) && first.length === 2) {
+            return new Map<K, V>(this as any);
+        } else if (this.length() === 0) {
+            return new Map<K, V>();
+        } else {
+            return this.chunk(2).toMap<K, V>();
+        }
     }
 
     toSet(): Set<T> {
@@ -473,5 +545,12 @@ export class Sequence<T> {
         return done;
     }
 
+    length(): number {
+        let count = 0;
+        for (const x of this) {
+            count++;
+        }
+        return count;
+    }
 }
 
