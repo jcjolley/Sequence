@@ -1,6 +1,6 @@
 {
   "name": "@jcjolley/sequence",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "A fully-typed batteries-included lazy list with faster-than-array performance built around generators",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
