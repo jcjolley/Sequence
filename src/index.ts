@@ -1,4 +1,4 @@
-import {isIterable, isIterator} from "./utilities";
+import {isIterable, isIterator, Reduced} from "./utilities";
 
 /** @class Sequence representing a lazy list of values. */
 export class Sequence<T> {
@@ -279,6 +279,9 @@ export class Sequence<T> {
     /**
      * Reduces a sequence into a single value using the provided function
      * E.g., Sequence.range().take(4).reduce((sum, x) => sum + x, 0) yields 6
+     *
+     * Can bail early if returned acc is an instance of Reduced
+     * E.g., Sequence.range().reduce((some,x) => sum > 5 ? reduced(acc) : sum + x) yields 6
      * @param fn
      * @param initial
      */
@@ -288,6 +291,9 @@ export class Sequence<T> {
             acc = initial;
             for (const x of this.rest()) {
                 acc = fn(acc, x);
+                if (acc instanceof Reduced) {
+                    return acc.result;
+                }
             }
         } else {
             acc = this.fold(fn)
@@ -304,7 +310,10 @@ export class Sequence<T> {
     fold(fn: (acc: any, x: T) => any) {
         let acc = this.first();
         for (const x of this.rest()) {
-            acc = fn(acc, x)
+            acc = fn(acc, x);
+            if (acc instanceof Reduced) {
+                return acc.result;
+            }
         }
         return acc
     }

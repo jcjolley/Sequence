@@ -1,4 +1,5 @@
 import {Sequence} from "./index";
+import {reduced} from "./utilities";
 
 describe("Terminations of Sequence:", () => {
     describe("toArray", () => {
@@ -97,6 +98,11 @@ describe("Terminations of Sequence:", () => {
             expect(res).toEqual(15)
         });
 
+        it("should bail early if acc is instance of Reduced", () => {
+            const res = Sequence.range().reduce((acc, x) => acc > 5 ? reduced(acc) : acc + x);
+            expect(res).toEqual(6)
+        });
+
         it("should reduce a sequence into a single value when no initial value is provided", () => {
             const res = Sequence.of([1, 2, 3, 4, 5]).reduce((acc, x) => acc + x);
             expect(res).toEqual(15)
@@ -107,6 +113,15 @@ describe("Terminations of Sequence:", () => {
         it("should fold a sequence into a single value", () => {
             const res = Sequence.of([1, 2, 3, 4, 5]).fold((acc, x) => acc + x);
             expect(res).toEqual(15)
+        });
+        it("should bail if acc is ever instance of Reduced", () => {
+            const res = Sequence.range().fold((acc, x) => acc > 5 ? reduced(acc) : acc + x);
+            expect(res).toEqual(6)
+        });
+        it("should be repeatable", () => {
+            const seq = Sequence.of([1, 2, 3, 4, 5]);
+            expect(seq.fold((acc, x) => acc + x)).toEqual(15);
+            expect(seq.fold((acc, x) => acc + x)).toEqual(15)
         });
     });
 
