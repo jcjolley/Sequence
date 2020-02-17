@@ -1,5 +1,7 @@
 import {isIterable, isIterator, Reduced} from "./utilities";
 
+export {reduced, Reduced} from "./utilities";
+
 /** @class Sequence representing a lazy list of values. */
 export class Sequence<T> {
     * [Symbol.iterator](): Generator<T, void, undefined> {
