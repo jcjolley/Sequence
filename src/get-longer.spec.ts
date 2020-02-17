@@ -88,14 +88,19 @@ describe("Methods that make the sequence longer:", () => {
 
     describe("interleave", () => {
         it("should interleave the elements of an Iterable into the sequence", () => {
-            const seq = Sequence.of([1, 3, 5]).interleave([2, 4]);
-            expect(seq.toArray()).toMatchObject([1, 2, 3, 4, 5])
+            const seq = Sequence.of([1, 3, 5, 7]).interleave([2, 4, 6]);
+            expect(seq.toArray()).toMatchObject([1, 2, 3, 4, 5, 6])
+        });
+
+        it("should interleave the elements of an Iterable into the sequence", () => {
+            const seq = Sequence.of([1, 3]).interleave([2, 4, 6]);
+            expect(seq.toArray()).toMatchObject([1, 2, 3, 4])
         });
 
         it("should be repeatedly consumable", () => {
             const seq = Sequence.of([1, 3, 5]).interleave([2, 4]);
-            expect(seq.toArray()).toMatchObject([1, 2, 3, 4, 5]);
-            expect(seq.toArray()).toMatchObject([1, 2, 3, 4, 5]);
+            expect(seq.toArray()).toMatchObject([1, 2, 3, 4]);
+            expect(seq.toArray()).toMatchObject([1, 2, 3, 4]);
         })
     });
 

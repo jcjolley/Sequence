@@ -16,12 +16,12 @@ describe("Transform a sequence", () => {
 
     describe("mapIndexed", () => {
         it('should apply the provided function to each element of the sequence with the index', () => {
-            const seq = Sequence.of([1, 2, 3]).mapIndexed((i, x) => x + i);
+            const seq = Sequence.of([1, 2, 3]).mapIndexed((x, i) => x + i);
             expect(seq.toArray()).toMatchObject([1, 3, 5]);
         });
 
         it('should be repeatedly consumable', () => {
-            const seq = Sequence.of([1, 2, 3]).mapIndexed((i, x) => x + i);
+            const seq = Sequence.of([1, 2, 3]).mapIndexed((x, i) => x + i);
             expect(seq.toArray()).toMatchObject([1, 3, 5]);
             expect(seq.toArray()).toMatchObject([1, 3, 5]);
         });
@@ -97,7 +97,18 @@ describe("Transform a sequence", () => {
             const chunked = Sequence.range().chunk(2).take(3).map(x => x.toArray());
             expect(chunked.toArray()).toMatchObject([[0, 1], [2, 3], [4, 5]]);
             expect(chunked.toArray()).toMatchObject([[0, 1], [2, 3], [4, 5]])
+        });
+
+        it("should return a hanging partial chunk if there is one", () => {
+            const chunked = Sequence.range().take(7).chunk(3).map(x => x.toArray());
+            expect(chunked.toArray()).toMatchObject([[0, 1, 2], [3, 4, 5], [6]])
+        });
+
+        it("shouldn't omit a hanging chunk if there isn't one", () => {
+            const chunked = Sequence.range().take(6).chunk(3).map(x => x.toArray());
+            expect(chunked.toArray()).toMatchObject([[0, 1, 2], [3, 4, 5]])
         })
+
     });
 
     describe("splitAt", () => {
@@ -137,9 +148,9 @@ describe("Transform a sequence", () => {
     describe("replace", () => {
         it("should replace any items found as keys in the map with their corresponding values", () => {
             const letters = Sequence.range().map(x => String.fromCharCode(x + 65)).take(3);
+
             const replacements = Sequence.range().interleave(letters).toMap<number, string>();
             const seq = Sequence.range().replace(replacements).take(5);
-
             expect(seq.toArray()).toMatchObject(["A", "B", "C", 3, 4])
         });
 
