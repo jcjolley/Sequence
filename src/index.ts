@@ -592,8 +592,8 @@ export class Sequence<T> {
         const seq = this;
         return new Sequence(function* () {
             for (const x of seq) {
-                const xs = fn(x);
-                for (const y of xs) {
+                const ys = fn(x);
+                for (const y of ys) {
                     yield y;
                 }
             }
@@ -810,6 +810,53 @@ export class Sequence<T> {
         const gen = this.toGenerator();
         const {done} = gen.next();
         return done;
+    }
+
+    /**
+     * Returns true if every element in the sequence passes pred, otherwise false
+     * @param  pred
+     */
+    every(pred: (x: T) => boolean): boolean {
+        for (const x of this) {
+            if (!pred(x)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Returns true if any element in the sequence passes pred
+     * @param  pred
+     */
+    any(pred: (x: T) => boolean): boolean {
+        for (const x of this) {
+            if (pred(x)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Returns the first object that passes pred, otherwise undefined
+     * @param pred
+     */
+    some(pred: (x: T) => boolean): T | undefined {
+        for (const x of this) {
+            if (pred(x)) {
+                return x;
+            }
+        }
+        return undefined;
+    }
+
+    /**
+     * Returns false if any element in the sequence passes pred
+     * @param  pred
+     */
+    none(pred: (x: T) => boolean) {
+        return !this.any(pred);
     }
 
     /**
