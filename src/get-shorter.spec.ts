@@ -205,5 +205,22 @@ describe("Methods that make a sequence shorter: ", () => {
         });
     });
 
+    describe("slice", () => {
+        it("should return the slice of the sequence from start onwards", () => {
+            const seq = Sequence.range().slice(2).take(5);
+            expect(seq.toArray()).toMatchObject([2, 3, 4, 5, 6]);
+        });
+
+        it("should return the slice of the sequence from start to end", () => {
+            const seq = Sequence.range().slice(2, 7);
+            expect(seq.toArray()).toMatchObject([2, 3, 4, 5, 6]);
+        });
+
+        it('should be repeatedly consumable', () => {
+            const seq = Sequence.range().slice(2, 7);
+            expect(seq.toArray()).toMatchObject([2, 3, 4, 5, 6]);
+            expect(seq.toArray()).toMatchObject([2, 3, 4, 5, 6]);
+        });
+    });
 
 });

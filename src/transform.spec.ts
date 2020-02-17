@@ -162,5 +162,41 @@ describe("Transform a sequence", () => {
             expect(seq.toArray()).toMatchObject(["A", "B", "C", 3, 4]);
             expect(seq.toArray()).toMatchObject(["A", "B", "C", 3, 4])
         })
-    })
+    });
+
+    describe("splice", () => {
+        it("should delete items", () => {
+            const seq = Sequence.range().take(10).splice(2, 5);
+            const expected = Sequence.range().take(10).toArray();
+            expected.splice(2, 5);
+            expect(seq.toArray()).toMatchObject(expected);
+        });
+
+        it("should add items", () => {
+            const seq = Sequence.range().take(10).splice(2, 3, [1, 1, 1]);
+            const expected = Sequence.range().take(10).toArray();
+            expected.splice(2, 3, 1, 1, 1);
+            expect(seq.toArray()).toMatchObject(expected);
+        });
+
+        it("drop if only provided one argument", () => {
+            const seq = Sequence.range().take(10).splice(2);
+            const expected = Sequence.range().take(10).toArray();
+            expected.splice(2);
+            expect(seq.toArray()).toMatchObject(expected);
+        });
+
+        it("handle negative starts", () => {
+            const seq = Sequence.range().take(10).splice(-3);
+            const expected = Sequence.range().take(10).toArray();
+            expected.splice(-3);
+            expect(seq.toArray()).toMatchObject(expected);
+        });
+
+        it('should be repeatedly consumable', () => {
+            const seq = Sequence.range().slice(2, 7);
+            expect(seq.toArray()).toMatchObject([2, 3, 4, 5, 6]);
+            expect(seq.toArray()).toMatchObject([2, 3, 4, 5, 6]);
+        });
+    });
 });

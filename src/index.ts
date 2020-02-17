@@ -453,6 +453,50 @@ export class Sequence<T> {
     }
 
     /**
+     * Create a sequence from a slice of the current sequence
+     * @param  start - the index to start at
+     * @param  end - the index to end at, not inclusive
+     * @returns the portion of the sequence from start to end
+     */
+    slice(start: number, end = Infinity): Sequence<T> {
+        return this.drop(start).take(end - start)
+    }
+
+    /**
+     * Acts as Array.splice
+     * @param  start
+     * @param  deleteCount
+     * @param  items - an iterable of items to add in place
+     * @returns {Sequence<any>}
+     */
+    splice(start: number, deleteCount = Infinity, items: Iterable<T> = []) {
+        const seq = this;
+        return new Sequence(function* () {
+            let realStart = start >= 0 ? start : seq.length() + start;
+            let dc = deleteCount;
+            let gen = items[Symbol.iterator]();
+            let {done, value} = gen.next();
+            let i = 0;
+            for (const x of seq) {
+                if (i < realStart) {
+                    yield x;
+                    i++;
+                } else if (!done) {
+                    while (!done) {
+                        yield value;
+                        ({done, value} = gen.next());
+                    }
+                } else if (dc > 1) {
+                    dc--;
+                } else {
+                    yield x;
+                }
+
+            }
+        })
+    }
+
+    /**
      * Creates a sequence from the current sequence with each iterable in the sequence spread.
      * E.g., Sequence.of([1, [2, 3], [[4], [5, 6]]]).flatten() yields S[1, 2, 3, 4, 5, 6]
      *
