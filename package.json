@@ -1,7 +1,7 @@
 {
   "name": "@jcjolley/sequence",
   "version": "0.0.12",
-  "description": "A fully-typed batteries-included lazy list with faster-than-array performance built around generators",
+  "description": "A fully-typed batteries-included lazy list built around generators",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
@@ -23,7 +23,7 @@
     "build": "tsc",
     "test": "jest",
     "prepublishOnly": "npm run build",
-    "benchmark": "node benchmark/benchmark.js"
+    "benchmark": "node Benchmarks/index.js"
   },
   "dependencies": {},
   "devDependencies": {
