@@ -1,4 +1,4 @@
-import {Sequence} from "../src";
+import {Sequence} from "./index";
 
 describe('Sequence Creation: ', () => {
     describe('Sequence.of', () => {

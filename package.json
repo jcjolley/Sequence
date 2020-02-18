@@ -4,7 +4,6 @@
   "description": "A fully-typed batteries-included lazy list with faster-than-array performance built around generators",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "type": "module",
   "files": [
     "dist/*"
   ],
@@ -25,7 +24,8 @@
     "test": "jest",
     "prepublishOnly": "npm run build"
   },
-  "dependencies": {},
+  "dependencies": {
+  },
   "devDependencies": {
     "@types/jest": "^25.1.2",
     "@types/lodash": "4.14.141",

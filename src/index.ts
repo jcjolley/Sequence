@@ -477,7 +477,7 @@ export class Sequence<T> {
             let gen = items[Symbol.iterator]();
             let {done, value} = gen.next();
             let i = 0;
-            for (const x of seq) {
+            for (const x of seq) { // This implementation is kind of awful.
                 if (i < realStart) {
                     yield x;
                     i++;
@@ -485,8 +485,11 @@ export class Sequence<T> {
                     while (!done) {
                         yield value;
                         ({done, value} = gen.next());
+                        if (done) {
+                            dc--;
+                        }
                     }
-                } else if (dc > 1) {
+                } else if (dc > 0) {
                     dc--;
                 } else {
                     yield x;

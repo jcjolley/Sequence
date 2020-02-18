@@ -166,32 +166,49 @@ describe("Transform a sequence", () => {
 
     describe("splice", () => {
         it("should delete items", () => {
-            const seq = Sequence.range().take(10).splice(2, 5);
-            const expected = Sequence.range().take(10).toArray();
+            const seq = Sequence.range().take(12).splice(2, 5);
+            const expected = Sequence.range().take(12).toArray();
             expected.splice(2, 5);
+            console.log("seq", seq.toArray());
+            console.log("expected", expected);
             expect(seq.toArray()).toMatchObject(expected);
         });
 
         it("should add items", () => {
-            const seq = Sequence.range().take(10).splice(2, 3, [1, 1, 1]);
+            const seq = Sequence.range().take(10).splice(2, 3, [-1, -1, -1]);
             const expected = Sequence.range().take(10).toArray();
-            expected.splice(2, 3, 1, 1, 1);
+            expected.splice(2, 3, -1, -1, -1);
             expect(seq.toArray()).toMatchObject(expected);
         });
 
-        it("drop if only provided one argument", () => {
+        it("should drop if only provided one argument", () => {
             const seq = Sequence.range().take(10).splice(2);
             const expected = Sequence.range().take(10).toArray();
             expected.splice(2);
             expect(seq.toArray()).toMatchObject(expected);
         });
 
-        it("handle negative starts", () => {
+        it("should handle negative starts", () => {
             const seq = Sequence.range().take(10).splice(-3);
             const expected = Sequence.range().take(10).toArray();
             expected.splice(-3);
             expect(seq.toArray()).toMatchObject(expected);
         });
+
+        it("should delete from negative starts", () => {
+            const seq = Sequence.range().take(10).splice(-5, 3);
+            const expected = Sequence.range().take(10).toArray();
+            expected.splice(-5, 3);
+            expect(seq.toArray()).toMatchObject(expected);
+        });
+
+        it("should delete and insert from negative starts", () => {
+            const seq = Sequence.range().take(10).splice(-5, 3, [1, 2]);
+            const expected = Sequence.range().take(10).toArray();
+            expected.splice(-5, 3, 1, 2);
+            expect(seq.toArray()).toMatchObject(expected);
+        });
+
 
         it('should be repeatedly consumable', () => {
             const seq = Sequence.range().slice(2, 7);
