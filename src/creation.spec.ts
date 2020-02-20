@@ -1,4 +1,5 @@
 import {Sequence} from "./index";
+import {Sequence2} from "./sequence2";
 
 describe('Sequence Creation: ', () => {
     describe('Sequence.of', () => {
@@ -94,6 +95,19 @@ describe('Sequence Creation: ', () => {
             expect(seq).toBeInstanceOf(Sequence);
             expect(seq.toArray()).toMatchObject([6, 7, 8, 9, 10])
 
+        })
+    });
+
+    describe("asdf", () => {
+        it("should be repeatable", () => {
+            const arr = [1, 2, 3];
+            const seq = Sequence2.of(arr);
+            const res1 = seq.map(x => x + 1);
+            const res2 = seq.map(x => x + 1);
+            console.log("Res1: ", [...res1]);
+            console.log("Res2: ", [...res2]);
+            expect([...res1]).toMatchObject([2, 3, 4]);
+            expect([...res2]).toMatchObject([2, 3, 4]);
         })
     })
 });

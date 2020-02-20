@@ -1,5 +1,6 @@
 const Suite = require("../node_modules/benchmark/benchmark").Suite;
 const Sequence = require("../dist/index.js").Sequence;
+const Sequence2 = require("../dist/sequence2.js").Sequence2;
 const L = require("list/methods");
 const _ = require("lodash/fp");
 
@@ -21,6 +22,16 @@ module.exports = {
             })
                 .add("Sequence", () => {
                     Sequence.range(0, size)
+                        .filter(x => x % 3 === 0)
+                        .map(x => x * 2)
+                        .filter(x => x % 2 === 0)
+                        .map(x => x + 1)
+                        .map(x => x * x)
+                        .filter(x => x % 2 === 1)
+                        .reduce((acc, x) => acc + x);
+                })
+                .add("Sequence2", () => {
+                    Sequence2.range(0, size)
                         .filter(x => x % 3 === 0)
                         .map(x => x * 2)
                         .filter(x => x % 2 === 0)
